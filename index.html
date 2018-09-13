@@ -1,0 +1,319 @@
+
+<html>
+    
+<head>
+<script>
+
+this["Perf"]&&void 0!==this["Perf"].enabled||(function(window){'use strict';var a={DEBUG:{name:"DEBUG",value:1},INTERNAL:{name:"INTERNAL",value:2},PRODUCTION:{name:"PRODUCTION",value:3},DISABLED:{name:"DISABLED",value:4}};
+window.PerfConstants={PAGE_START_MARK:"PageStart",PERF_PAYLOAD_PARAM:"bulkPerf",MARK_NAME:"mark",MEASURE_NAME:"measure",MARK_START_TIME:"st",MARK_LAST_TIME:"lt",PAGE_NAME:"pn",ELAPSED_TIME:"et",REFERENCE_TIME:"rt",Perf_LOAD_DONE:"loadDone",STATS:{NAME:"stat",SERVER_ELAPSED:"internal_serverelapsed",DB_TOTAL_TIME:"internal_serverdbtotaltime",DB_CALLS:"internal_serverdbcalls",DB_FETCHES:"internal_serverdbfetches"}};window.PerfLogLevel=a;var b=window.Perf={currentLogLevel:a.DISABLED,mark:function(){return b},endMark:function(){return b},updateMarkName:function(){return b},measureToJson:function(){return""},toJson:function(){return""},setTimer:function(){return b},setServerTime:function(){return b},toPostVar:function(){return""},getMeasures:function(){return[]},getBeaconData:function(){return null},setBeaconData:function(){},clearBeaconData:function(){},removeStats:function(){},stat:function(){return b},getStat:function(){return-1},
+onLoad:function(){},startTransaction:function(){return b},endTransaction:function(){return b},updateTransaction:function(){return b},isOnLoadFired:function(){return!1},util:{setCookie:function(){}},enabled:!1};})(this);
+
+
+</script>
+
+<script>
+
+    (function(UITheme) {
+        UITheme.getUITheme = function() { 
+            return UserContext.uiTheme;
+        };
+    }(window.UITheme = window.UITheme || {}));</script><meta HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE" />
+    
+    <meta HTTP-EQUIV="Expires" content="Mon, 01 Jan 1990 12:00:00 GMT" />
+
+    <title>Snap-ins</title>
+    <meta content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=0" name="viewport" />
+</head>
+<body>
+    <button id="esw_button_online" onClick="checkLocalStorage()">test snap in</button>
+</body>
+   
+
+<style type="text/css">
+    .embeddedServiceHelpButton .helpButton .uiButton { background-color: #018486; font-family: "Salesforce Sans", sans-serif; }
+    .embeddedServiceHelpButton .helpButton .uiButton:focus { outline: 1px solid #018486; }
+    @font-face {
+    font-family: 'Salesforce Sans';
+    src: url('https://www.sfdcstatic.com/system/shared/common/assets/fonts/SalesforceSans/SalesforceSans-Regular.woff') format('woff'),
+    url('https://www.sfdcstatic.com/system/shared/common/assets/fonts/SalesforceSans/SalesforceSans-Regular.ttf') format('truetype');
+    }
+</style>
+<script type='text/javascript' src='https://service.force.com/embeddedservice/5.0/esw.min.js'></script>
+<script type="text/javascript">
+
+    // check localStorage
+    var checkLocalStorage = function() {
+        //if ( !localStorage.getItem('chatOpened') ) {
+            init();
+        //} else {  alert("Chat aberto em outra aba/ janela"); }
+    };
+
+    var verifySnapinIsActived = setInterval( function(){
+        //var chatButton = document.getElementsByClassName('startButton');
+        var chatButton = document.getElementsByClassName('helpButton');
+        if(chatButton != null && chatButton.length > 0){
+            chatButton.item(0).addEventListener('click', function(){
+                localStorage.setItem('chatOpened', this);  
+                clearInterval(verifySnapinIsActived);
+            })
+        }
+
+    }, 1000); 
+
+    var verifySnapinClosed = setInterval( function(){
+        var closeButton = document.getElementsByClassName('closeButton');
+        if(closeButton != null && closeButton.length > 0){
+            closeButton.item(0).addEventListener('click', function(){
+                if( document.getElementsByClassName('dialogButton').length == 0 ){
+                    localStorage.removeItem('chatOpened'); 
+                    closeChat(); 
+                    clearInterval(verifySnapinClosed);
+                }
+            })
+        }
+
+    }, 1000);  
+
+    var verifySnapinFinalized = setInterval( function(){
+        var finalizedButton = document.getElementsByClassName('dialogButton');
+        if(finalizedButton != null && finalizedButton.length > 0){
+            finalizedButton.item(0).addEventListener('click', function(){
+                localStorage.removeItem('chatOpened');  
+                closeChat();
+                clearInterval(verifySnapinFinalized);
+            });
+        }
+
+    }, 1000);            
+    
+    function closeChat(){
+        if(document.getElementsByClassName('embeddedServiceHelpButton').length > 0){
+            document.getElementsByClassName('embeddedServiceHelpButton')[0].remove();
+        } 
+    }
+    
+    //close chat when click button "ok" - pos-chat
+    var verifyFinishChat = setInterval( function(){
+        var btnOk = document.getElementsByClassName('btn btn-primary');
+        if(btnOk != null && btnOk.length >= 1){
+            btnOk.item(1).addEventListener('click', function(){
+                closeChat();
+                clearInterval(verifyFinishChat);
+            });
+        }    
+    }, 1000);
+
+    // Ask other tabs for session storage
+    if (!sessionStorage.length) {
+        localStorage.setItem('getSessionStorage', 'foobar');
+        localStorage.removeItem('getSessionStorage');
+    };
+
+    window.onunload = function(){
+        if(localStorage.getItem('chatOpened')){
+            if (document.getElementsByClassName('embeddedServiceSidebar').length > 0) {
+                 localStorage.removeItem('chatOpened'); 
+            }      
+        }
+    }
+    
+    window.onload = function(){
+        verifySnapinIsActived;
+        verifySnapinClosed;
+        verifyFinishChat;    
+    }
+    
+    function init(){
+        if (!window.embedded_svc) {
+            var s = document.createElement('script'); s.setAttribute('src', 'https://userede--Preprod.cs26.my.salesforce.com/embeddedservice/5.0/esw.min.js');
+            s.onload = function() { initESW(null); }; document.body.appendChild(s);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+        } else { 
+            initESW('https://service.force.com');  
+        }  
+    }
+    
+    function initESW(gslbBaseURL){
+        
+        embedded_svc.settings.displayHelpButton = true; //Or false
+        embedded_svc.settings.language = ''; //For example, enter 'en' or 'en-US'
+
+        //embedded_svc.settings.defaultMinimizedText = '...'; //(Defaults to Chat with an Expert)
+        //embedded_svc.settings.disabledMinimizedText = '...'; //(Defaults to Agent Offline)
+
+        //embedded_svc.settings.loadingText = ''; //(Defaults to Loading)
+        //embedded_svc.settings.storageDomain = 'domain.com'; //(Sets the domain for your deployment so that visitors can navigate subdomains during a chat session)
+
+        // Settings for Live Agent
+        //embedded_svc.settings.directToButtonRouting = function(prechatFormData) {
+        // Dynamically changes the button ID based on what the visitor enters in the pre-chat form.
+        // Returns a valid button ID.
+        //};
+
+        //embedded_svc.settings.fallbackRouting = []; //An array of button IDs, user IDs, or userId_buttonId
+        //embedded_svc.settings.offlineSupportMinimizedText = '...'; //(Defaults to Contact Us)
+
+        embedded_svc.settings.enabledFeatures = ['LiveAgent'];
+        embedded_svc.settings.entryFeature = 'LiveAgent';
+
+        embedded_svc.settings.extraPrechatFormDetails = [
+            {
+                "label": "First Name",
+                "value": "John",                                            //valor firstName
+                "displayToAgent": true
+            }, 
+            {
+                "label": "Last Name",
+                "value": "Doe",                                             //valor lastName
+                "displayToAgent": true
+            }, 
+            {
+                "label": "Email",
+                "value": "john.doe@salesforce.com",                         //valor email
+                "displayToAgent": true
+            }, 
+            {
+                "label": "issue",
+                "value": "Overriding your setup",                           //valor issue
+                "displayToAgent": true
+            }, 
+            {
+                "label": "Origin",
+                "value": "Chat App",                                        //valor origin                                         
+                "displayToAgent": true
+            }, 
+            {
+                "label": "PV",
+                "value": "84d6iFFExklKJ/7iCP9pvAl7U14nUK4ZjACfetmD+DI=",    //valor do PV para popular conta no caso
+                "displayToAgent": true
+            },
+            {
+                "label": "Mensagem",   
+                "saveToTranscript": "Mensagem__c",                          //mensagem no objeto transcript                                      
+                "displayToAgent": true
+            },
+            {
+                "label": "Assunto Caso",                                          
+                "displayToAgent": true
+            }    
+        ];
+
+        embedded_svc.settings.extraPrechatInfo = [
+            {
+                "entityName": "Contact",
+                "showOnCreate": true,
+                "linkToEntityName": "Case",
+                "linkToEntityField": "ContactId",
+                "saveToTranscript": "ContactId",
+                "entityFieldMaps": [
+                    {
+                        "isExactMatch": true,
+                        "fieldName": "FirstName",
+                        "doCreate": true,
+                        "doFind": true,
+                        "label": "First Name"
+                    },
+                    {
+                        "isExactMatch": true,
+                        "fieldName": "LastName",
+                        "doCreate": true,
+                        "doFind": true,
+                        "label": "Last Name"
+                    },
+                    {
+                        "isExactMatch": true,
+                        "fieldName": "Email",
+                        "doCreate": true,
+                        "doFind": true,
+                        "label": "Email"
+                    }
+                ]
+            },
+            {
+                "entityName": "Case",
+                "showOnCreate": true,
+                "saveToTranscript": "CaseId",
+                "entityFieldMaps": [
+                    {
+                        "isExactMatch": false,
+                        "fieldName": "Subject",
+                        "doCreate": true,
+                        "doFind": false,
+                        "label": "issue"
+                    },
+                    {
+                        "isExactMatch": false,
+                        "fieldName": "Status",
+                        "doCreate": true,
+                        "doFind": false,
+                        "label": "Status"
+                    },
+                    {
+                        "isExactMatch": false,
+                        "fieldName": "Origin",
+                        "doCreate": true,
+                        "doFind": false,
+                        "label": "Origin"
+                    },
+                    {
+                        "isExactMatch": false,
+                        "fieldName": "AssuntoCasoCliente__c",
+                        "doCreate": true,
+                        "doFind": false,
+                        "label": "Assunto Caso"
+                    },
+                    {
+                        "isExactMatch": false,
+                        "fieldName": "Mensagem__c",
+                        "doCreate": true,
+                        "doFind": false,
+                        "label": "Mensagem"
+                    }
+                ]
+            },
+            {
+                "entityName": "Account",
+                "showOnCreate": true,
+                "saveToTranscript": "AccountId",
+                "linkToEntityName": "Case",
+                "linkToEntityField": "AccountId",
+                "entityFieldMaps": [
+                    {
+                        "isExactMatch": false,
+                        "fieldName": "Numero_do_PV__c",
+                        "doCreate": false,
+                        "doFind": true,
+                        "label": "PV"
+                    }
+                ]
+            }
+        ]
+        
+        /*embedded_svc.init('https://userede--HLG.cs54.my.salesforce.com', 'https://hlg-useredeapi.cs54.force.com/', gslbBaseURL, '00D0S0000000ViL', 'Snap_in_atendimento_digital', 
+        {   baseLiveAgentContentURL: 'https://c.la3-c2cs-dfw.salesforceliveagent.com/content', 
+            deploymentId: '5720S0000004CCl', 
+            buttonId: '5730S0000004CV4', 
+            baseLiveAgentURL: 'https://d.la3-c2cs-dfw.salesforceliveagent.com/chat', eswLiveAgentDevName: 'EmbeddedServiceLiveAgent_Parent04I0S000000000pUAA_1643c726e4a',isOfflineSupportEnabled: false
+        });*/
+		embedded_svc.init(
+			'https://userede--Preprod.cs26.my.salesforce.com',
+			'https://preprod-useredeafvc1.cs26.force.com/',
+			gslbBaseURL,
+			'00D210000000lsM',
+			'Snap_in_atendimento_digital',
+			{
+				baseLiveAgentContentURL: 'https://c.la4-c2cs-dfw.salesforceliveagent.com/content',
+				deploymentId: '5720a000000TZvG',
+				buttonId: '5730a000000Tbho',
+				baseLiveAgentURL: 'https://d.la4-c2cs-dfw.salesforceliveagent.com/chat',
+				eswLiveAgentDevName: 'EmbeddedServiceLiveAgent_Parent04I210000008OIKEA2_165ab9a8417',
+				isOfflineSupportEnabled: false
+			}
+		);
+    };
+    
+    
+
+</script>
+    
+
+</html>
