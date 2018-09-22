@@ -125,7 +125,7 @@ onLoad:function(){},startTransaction:function(){return b},endTransaction:functio
     
     function init(){
         if (!window.embedded_svc) {
-            var s = document.createElement('script'); s.setAttribute('src', 'https://userede--Preprod.cs26.my.salesforce.com/embeddedservice/5.0/esw.min.js');
+            var s = document.createElement('script'); s.setAttribute('src', 'https://userede.my.salesforce.com/embeddedservice/5.0/esw.min.js');
             s.onload = function() { initESW(null); }; document.body.appendChild(s);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
         } else { 
             initESW('https://service.force.com');  
@@ -288,12 +288,23 @@ onLoad:function(){},startTransaction:function(){return b},endTransaction:functio
             }
         ]
         
-        /*embedded_svc.init('https://userede--HLG.cs54.my.salesforce.com', 'https://hlg-useredeapi.cs54.force.com/', gslbBaseURL, '00D0S0000000ViL', 'Snap_in_atendimento_digital', 
-        {   baseLiveAgentContentURL: 'https://c.la3-c2cs-dfw.salesforceliveagent.com/content', 
-            deploymentId: '5720S0000004CCl', 
-            buttonId: '5730S0000004CV4', 
-            baseLiveAgentURL: 'https://d.la3-c2cs-dfw.salesforceliveagent.com/chat', eswLiveAgentDevName: 'EmbeddedServiceLiveAgent_Parent04I0S000000000pUAA_1643c726e4a',isOfflineSupportEnabled: false
-        });*/
+		embedded_svc.init(
+					'https://userede.my.salesforce.com', 
+					'https://useredeafvc1.secure.force.com', 
+					gslbBaseURL, '00Dj0000001rnS9', 
+					'Snap_in_atendimento_digital', 
+					{ 
+						baseLiveAgentContentURL: 'https://c.la3-c1-phx.salesforceliveagent.com/content', 
+						deploymentId: '5720a000000TZvG', 
+						buttonId: '5730a000000Tbho', 
+						baseLiveAgentURL: 'https://d.la3-c1-phx.salesforceliveagent.com/chat', 
+						eswLiveAgentDevName: 'EmbeddedServiceLiveAgent_Parent04I0a000000XZJZEA4_165ff401e6f', 
+						isOfflineSupportEnabled: false
+					}
+				); 
+		};
+		
+		/*
 		embedded_svc.init(
 			'https://userede--Preprod.cs26.my.salesforce.com',
 			'https://preprod-useredeafvc1.cs26.force.com/',
@@ -310,7 +321,7 @@ onLoad:function(){},startTransaction:function(){return b},endTransaction:functio
 			}
 		);
     };
-    
+    */
     
 
 </script>
